@@ -63,12 +63,17 @@ _9797_mobile_app/
 _9797_mobile_app_new/
 arabic_coupon_mobile/
 
+# Web app build artifacts
+web/dist/
+web/node_modules/
+web/.env
+
 # Legacy bloat directories
 security/
 scripts/
 tools/
 monitoring/
-web/
+web/react/
 test/
 docs/
 .github/

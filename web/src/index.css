@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-cyber-border;
+  }
+
+  body {
+    @apply bg-cyber-bg text-cyber-text antialiased;
+  }
+
+  html[dir="rtl"] {
+    @apply font-arabic;
+  }
+
+  html[dir="ltr"] {
+    @apply font-english;
+  }
+}
+
+@layer components {
+  .shimmer {
+    @apply relative overflow-hidden bg-cyber-surface;
+  }
+
+  .shimmer::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent;
+  }
+
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .btn-primary {
+    @apply bg-cyber-accent hover:bg-cyber-accentDark text-cyber-bg font-semibold px-6 py-3 rounded-lg transition-all duration-300 hover:shadow-cyber;
+  }
+
+  .btn-secondary {
+    @apply bg-cyber-surface hover:bg-cyber-hover text-cyber-text font-semibold px-6 py-3 rounded-lg border border-cyber-border transition-all duration-300;
+  }
+
+  .card {
+    @apply bg-cyber-card rounded-xl border border-cyber-border overflow-hidden transition-all duration-300 hover:border-cyber-accent/50 hover:shadow-cyber;
+  }
+
+  .input-field {
+    @apply w-full bg-cyber-surface border border-cyber-border rounded-lg px-4 py-3 text-cyber-text placeholder-cyber-textDim focus:outline-none focus:border-cyber-accent transition-colors;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
+  }
+}
