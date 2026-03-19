@@ -160,7 +160,7 @@ class _CouponActionButtonsState extends State<CouponActionButtons> {
                   ),
                 ),
               ),
-              if (widget.coupon.storeUrl.isNotEmpty)
+              if (widget.coupon.storeUrl != null && widget.coupon.storeUrl!.isNotEmpty)
                 Expanded(
                   child: TextButton.icon(
                     onPressed: _openStore,
@@ -220,8 +220,8 @@ class _CouponActionButtonsState extends State<CouponActionButtons> {
       await Clipboard.setData(ClipboardData(text: widget.coupon.code));
 
       // Open store if URL is available
-      if (widget.coupon.storeUrl.isNotEmpty) {
-        final uri = Uri.parse(widget.coupon.storeUrl);
+      if (widget.coupon.storeUrl != null && widget.coupon.storeUrl!.isNotEmpty) {
+        final uri = Uri.parse(widget.coupon.storeUrl!);
         if (await canLaunchUrl(uri)) {
           await launchUrl(uri, mode: LaunchMode.externalApplication);
         }
@@ -261,7 +261,7 @@ class _CouponActionButtonsState extends State<CouponActionButtons> {
       final shareText = '''
 🎁 كوبون خصم من ${widget.coupon.storeName}
 
-📝 ${widget.coupon.title}
+📝 ${widget.coupon.description}
 💰 خصم ${widget.coupon.discountPercent}%
 🏷️ الكود: ${widget.coupon.code}
 💵 السعر بعد الخصم: ${widget.coupon.discountedPrice} ريال
@@ -269,7 +269,7 @@ class _CouponActionButtonsState extends State<CouponActionButtons> {
 📱 احصل على التطبيق للمزيد من الكوبونات!
       ''';
       
-      await Share.share(shareText);
+      await SharePlus.instance.share(ShareParams(text: shareText));
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -284,7 +284,7 @@ class _CouponActionButtonsState extends State<CouponActionButtons> {
 
   Future<void> _openStore() async {
     try {
-      final uri = Uri.parse(widget.coupon.storeUrl);
+      final uri = Uri.parse(widget.coupon.storeUrl!);
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }

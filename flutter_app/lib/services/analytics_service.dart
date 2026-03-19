@@ -151,7 +151,7 @@ class AnalyticsService {
   static Future<void> logEvent(String name, {Map<String, dynamic>? parameters}) async {
     await _analytics.logEvent(
       name: name,
-      parameters: parameters,
+      parameters: parameters?.cast<String, Object>(),
     );
   }
 }

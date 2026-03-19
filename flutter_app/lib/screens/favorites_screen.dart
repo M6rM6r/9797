@@ -265,8 +265,6 @@ class _FavoritesScreenState extends State<FavoritesScreen> {
                         },
                       );
                     },
-                    onFavoriteToggle: () => _toggleFavorite(doc.id),
-                    isFavorite: true,
                   );
                 },
                 childCount: _favoriteCoupons.length,

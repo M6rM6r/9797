@@ -237,7 +237,7 @@ class _CouponDetailScreenState extends State<CouponDetailScreen> {
 احصل على الكوبون من تطبيق كوبونات!
       ''';
 
-      await Share.share(shareText);
+      await SharePlus.instance.share(ShareParams(text: shareText));
 
       // Log analytics
       await AnalyticsService.logCouponShare(

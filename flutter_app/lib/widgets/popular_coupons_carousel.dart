@@ -16,7 +16,7 @@ class _PopularCouponsCarouselState extends State<PopularCouponsCarousel> {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   List<Coupon> _popularCoupons = [];
   bool _isLoading = true;
-  final CarouselController _carouselController = CarouselController();
+  final CarouselSliderController _carouselController = CarouselSliderController();
 
   @override
   void initState() {
@@ -161,7 +161,7 @@ class _PopularCouponsCarouselState extends State<PopularCouponsCarousel> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: _popularCoupons.asMap().entries.map((entry) {
                 return GestureDetector(
-                  onTap: () => _carouselController.animateToPage(entry.key),
+                  onTap: () => _carouselController.jumpToPage(entry.key),
                   child: Container(
                     width: 8,
                     height: 8,

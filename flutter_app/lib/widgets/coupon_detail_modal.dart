@@ -528,7 +528,7 @@ class _CouponDetailModalState extends State<CouponDetailModal> {
 احصل على الكوبون من تطبيق كوبونات!
       ''';
 
-      await Share.share(shareText);
+      await SharePlus.instance.share(ShareParams(text: shareText));
 
       // Log analytics
       await AnalyticsService.logCouponShare(
