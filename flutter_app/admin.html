@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة الكوبونات - لوحة التحكم</title>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .main-content {
+            padding: 40px 0;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: 'Tajawal', sans-serif;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin: 5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        }
+        
+        .coupons-list {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .coupon-item {
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .coupon-item:hover {
+            border-color: #667eea;
+        }
+        
+        .coupon-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .coupon-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+        }
+        
+        .coupon-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .coupon-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 10000;
+            font-weight: 600;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .coupon-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+            
+            .coupon-actions {
+                width: 100%;
+                justify-content: flex-end;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="material-icons">admin_panel_settings</span>
+                    إدارة الكوبونات
+                </div>
+                <div>
+                    <a href="index.html" style="color: white; text-decoration: none; margin-left: 20px;">
+                        <span class="material-icons" style="vertical-align: middle;">home</span>
+                        عرض الموقع
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            <h1 class="section-title">لوحة تحكم الكوبونات</h1>
+            
+            <!-- Statistics -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalCoupons">0</div>
+                    <div class="stat-label">إجمالي الكوبونات</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="activeCoupons">0</div>
+                    <div class="stat-label">كوبونات نشطة</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="expiredCoupons">0</div>
+                    <div class="stat-label">كوبونات منتهية</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalViews">0</div>
+                    <div class="stat-label">إجمالي المشاهدات</div>
+                </div>
+            </div>
+            
+            <!-- Add Coupon Form -->
+            <div class="form-container">
+                <h2 style="margin-bottom: 20px;">إضافة كوبون جديد</h2>
+                <form id="couponForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="storeName">اسم المتجر</label>
+                            <input type="text" id="storeName" name="storeName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="couponTitle">عنوان الكوبون</label>
+                            <input type="text" id="couponTitle" name="couponTitle" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="couponCode">كود الكوبون</label>
+                            <input type="text" id="couponCode" name="couponCode" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="discount">نسبة الخصم (%)</label>
+                            <input type="number" id="discount" name="discount" min="1" max="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="category">الفئة</label>
+                            <select id="category" name="category" required>
+                                <option value="">اختر الفئة</option>
+                                <option value="fashion">تسوق وأزياء</option>
+                                <option value="food">طعام ومطاعم</option>
+                                <option value="electronics">إلكترونيات</option>
+                                <option value="travel">سفر وفنادق</option>
+                                <option value="sports">رياضة وصحة</option>
+                                <option value="education">تعليم وتدريب</option>
+                                <option value="beauty">جمال وعناية</option>
+                                <option value="other">أخرى</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="expiryDate">تاريخ الانتهاء</label>
+                            <input type="date" id="expiryDate" name="expiryDate" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="description">وصف الكوبون</label>
+                        <textarea id="description" name="description" required></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="storeUrl">رابط المتجر</label>
+                            <input type="url" id="storeUrl" name="storeUrl" placeholder="https://...">
+                        </div>
+                        <div class="form-group">
+                            <label for="imageUrl">رابط الصورة</label>
+                            <input type="url" id="imageUrl" name="imageUrl" placeholder="https://...">
+                        </div>
+                    </div>
+                    
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button type="submit" class="btn btn-success">
+                            <span class="material-icons" style="vertical-align: middle;">add</span>
+                            إضافة كوبون
+                        </button>
+                        <button type="reset" class="btn btn-danger">
+                            <span class="material-icons" style="vertical-align: middle;">clear</span>
+                            مسح الحقول
+                        </button>
+                    </div>
+                </form>
+            </div>
+            
+            <!-- Coupons List -->
+            <div class="coupons-list">
+                <h2 style="margin-bottom: 20px;">الكوبونات الحالية</h2>
+                <div id="couponsList">
+                    <!-- Coupons will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics-compat.js"></script>
+    
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDlxD_SD3xEK4_20OGsCkuUCr-d-telO3o",
+            authDomain: "x9797x707x.firebaseapp.com",
+            projectId: "x9797x707x",
+            storageBucket: "x9797x707x.firebasestorage.app",
+            messagingSenderId: "99041938177",
+            appId: "1:99041938177:web:f36e0560a538b407e22900",
+            measurementId: "G-MNQJW8RN6W"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const analytics = firebase.analytics();
+        
+        // Global variables
+        let coupons = [];
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadCoupons();
+            updateStatistics();
+        });
+        
+        // Load coupons from localStorage (for demo)
+        function loadCoupons() {
+            const storedCoupons = localStorage.getItem('coupons');
+            if (storedCoupons) {
+                coupons = JSON.parse(storedCoupons);
+            } else {
+                // Default coupons
+                coupons = [
+                    {
+                        id: 1,
+                        storeName: 'نون Amazon',
+                        couponTitle: 'خصم 30% على الأجهزة الإلكترونية',
+                        couponCode: 'NON30',
+                        discount: 30,
+                        category: 'electronics',
+                        expiryDate: '2024-12-31',
+                        description: 'احصل على خصم 30% على جميع الأجهزة الإلكترونية المختارة. استخدم الكود عند الدفع للحصول على الخصم.',
+                        storeUrl: 'https://www.noon.com',
+                        imageUrl: '',
+                        isActive: true,
+                        createdAt: new Date().toISOString(),
+                        views: 0
+                    },
+                    {
+                        id: 2,
+                        storeName: 'هرفي بوينت',
+                        couponTitle: 'خصم 50% على وجبات العشاء',
+                        couponCode: 'HERVE50',
+                        discount: 50,
+                        category: 'food',
+                        expiryDate: '2024-12-25',
+                        description: 'استمتع بخصم 50% على جميع وجبات العشاء في فروع هرفي بوينت. صالح لشخصين أو أكثر.',
+                        storeUrl: 'https://www.herveypoint.com',
+                        imageUrl: '',
+                        isActive: true,
+                        createdAt: new Date().toISOString(),
+                        views: 0
+                    }
+                ];
+                saveCoupons();
+            }
+            displayCoupons();
+        }
+        
+        // Save coupons to localStorage
+        function saveCoupons() {
+            localStorage.setItem('coupons', JSON.stringify(coupons));
+        }
+        
+        // Display coupons
+        function displayCoupons() {
+            const couponsList = document.getElementById('couponsList');
+            
+            if (coupons.length === 0) {
+                couponsList.innerHTML = '<p style="text-align: center; color: #666;">لا توجد كوبونات حالياً</p>';
+                return;
+            }
+            
+            couponsList.innerHTML = coupons.map(coupon => `
+                <div class="coupon-item">
+                    <div class="coupon-header">
+                        <div class="coupon-title">${coupon.couponTitle}</div>
+                        <div class="coupon-actions">
+                            <button class="btn" onclick="editCoupon(${coupon.id})" style="padding: 8px 15px; font-size: 14px;">
+                                <span class="material-icons" style="vertical-align: middle; font-size: 16px;">edit</span>
+                                تعديل
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteCoupon(${coupon.id})" style="padding: 8px 15px; font-size: 14px;">
+                                <span class="material-icons" style="vertical-align: middle; font-size: 16px;">delete</span>
+                                حذف
+                            </button>
+                        </div>
+                    </div>
+                    <div class="coupon-details">
+                        <div class="detail-item">
+                            <div class="detail-label">المتجر</div>
+                            <div class="detail-value">${coupon.storeName}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">الكود</div>
+                            <div class="detail-value">${coupon.couponCode}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">الخصم</div>
+                            <div class="detail-value">${coupon.discount}%</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">الفئة</div>
+                            <div class="detail-value">${getCategoryName(coupon.category)}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">تاريخ الانتهاء</div>
+                            <div class="detail-value">${coupon.expiryDate}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">الحالة</div>
+                            <div class="detail-value">${coupon.isActive ? 'نشط' : 'غير نشط'}</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">المشاهدات</div>
+                            <div class="detail-value">${coupon.views || 0}</div>
+                        </div>
+                    </div>
+                    <div style="margin-top: 15px;">
+                        <div class="detail-label">الوصف</div>
+                        <div style="color: #666; font-size: 14px;">${coupon.description}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+        
+        // Get category name in Arabic
+        function getCategoryName(category) {
+            const categories = {
+                'fashion': 'تسوق وأزياء',
+                'food': 'طعام ومطاعم',
+                'electronics': 'إلكترونيات',
+                'travel': 'سفر وفنادق',
+                'sports': 'رياضة وصحة',
+                'education': 'تعليم وتدريب',
+                'beauty': 'جمال وعناية',
+                'other': 'أخرى'
+            };
+            return categories[category] || category;
+        }
+        
+        // Update statistics
+        function updateStatistics() {
+            const totalCoupons = coupons.length;
+            const activeCoupons = coupons.filter(c => c.isActive).length;
+            const expiredCoupons = coupons.filter(c => new Date(c.expiryDate) < new Date()).length;
+            const totalViews = coupons.reduce((sum, c) => sum + (c.views || 0), 0);
+            
+            document.getElementById('totalCoupons').textContent = totalCoupons;
+            document.getElementById('activeCoupons').textContent = activeCoupons;
+            document.getElementById('expiredCoupons').textContent = expiredCoupons;
+            document.getElementById('totalViews').textContent = totalViews;
+        }
+        
+        // Add coupon
+        document.getElementById('couponForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const newCoupon = {
+                id: Date.now(),
+                storeName: formData.get('storeName'),
+                couponTitle: formData.get('couponTitle'),
+                couponCode: formData.get('couponCode'),
+                discount: parseInt(formData.get('discount')),
+                category: formData.get('category'),
+                expiryDate: formData.get('expiryDate'),
+                description: formData.get('description'),
+                storeUrl: formData.get('storeUrl'),
+                imageUrl: formData.get('imageUrl'),
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                views: 0
+            };
+            
+            coupons.push(newCoupon);
+            saveCoupons();
+            displayCoupons();
+            updateStatistics();
+            
+            showNotification('تم إضافة الكوبون بنجاح!');
+            e.target.reset();
+            
+            // Log to analytics
+            analytics.logEvent('coupon_added', {
+                store_name: newCoupon.storeName,
+                category: newCoupon.category,
+                discount: newCoupon.discount
+            });
+        });
+        
+        // Edit coupon
+        function editCoupon(id) {
+            const coupon = coupons.find(c => c.id === id);
+            if (!coupon) return;
+            
+            // Fill form with coupon data
+            document.getElementById('storeName').value = coupon.storeName;
+            document.getElementById('couponTitle').value = coupon.couponTitle;
+            document.getElementById('couponCode').value = coupon.couponCode;
+            document.getElementById('discount').value = coupon.discount;
+            document.getElementById('category').value = coupon.category;
+            document.getElementById('expiryDate').value = coupon.expiryDate;
+            document.getElementById('description').value = coupon.description;
+            document.getElementById('storeUrl').value = coupon.storeUrl;
+            document.getElementById('imageUrl').value = coupon.imageUrl;
+            
+            // Remove the old coupon
+            deleteCoupon(id, false);
+            
+            // Scroll to form
+            document.querySelector('.form-container').scrollIntoView({ behavior: 'smooth' });
+            
+            showNotification('تم تحميل بيانات الكوبون للتعديل');
+        }
+        
+        // Delete coupon
+        function deleteCoupon(id, showMessage = true) {
+            coupons = coupons.filter(c => c.id !== id);
+            saveCoupons();
+            displayCoupons();
+            updateStatistics();
+            
+            if (showMessage) {
+                showNotification('تم حذف الكوبون بنجاح!');
+                
+                // Log to analytics
+                analytics.logEvent('coupon_deleted', {
+                    coupon_id: id
+                });
+            }
+        }
+        
+        // Show notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+        
+        console.log('🚀 Admin Panel loaded successfully!');
+        console.log('📊 Firebase Firestore initialized');
+        console.log('📝 Ready for coupon management');
+    </script>
+</body>
+</html>

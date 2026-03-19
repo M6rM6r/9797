@@ -1,0 +1,162 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() && 
+             request.auth.token.admin == true;
+    }
+    
+    function isCloudFunction() {
+      return isAuthenticated() && 
+             request.auth.token.firebase.sign_in_provider == 'anonymous';
+    }
+    
+    function isActiveCoupon() {
+      return resource.data.expiresAt > timestamp.now() && 
+             resource.data.isActive == true;
+    }
+    
+    // Coupons collection - Public read, Admin/Function write
+    match /coupons/{couponId} {
+      allow read: if true; // Public access for anonymous users
+      allow create: if isAdmin() || isCloudFunction();
+      allow update: if isAdmin() || isCloudFunction();
+      allow delete: if isAdmin();
+      
+      // Validate coupon structure
+      allow create, update: if 
+        resource.data.matches({
+          code: string,
+          storeId: string,
+          discountPercent: number,
+          description: string,
+          expiresAt: timestamp,
+          usageCount: number,
+          category: string,
+          isVerified: bool,
+          affiliateLink: string,
+          isActive: bool,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        }) &&
+        resource.data.discountPercent >= 0 && 
+        resource.data.discountPercent <= 100 &&
+        resource.data.usageCount >= 0 &&
+        resource.data.code.size() > 0 &&
+        resource.data.storeId.size() > 0;
+    }
+    
+    // Stores collection - Public read, Admin write
+    match /stores/{storeId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+      
+      allow create, update: if 
+        resource.data.matches({
+          name: string,
+          logoUrl: string,
+          description: string,
+          affiliateBaseUrl: string,
+          cashbackPercent: number,
+          isActive: bool,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        }) &&
+        resource.data.cashbackPercent >= 0 && 
+        resource.data.cashbackPercent <= 50 &&
+        resource.data.name.size() > 0;
+    }
+    
+    // Categories collection - Public read, Admin write
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+      
+      allow create, update: if 
+        resource.data.matches({
+          name: string,
+          iconUrl: string,
+          slug: string,
+          isActive: bool,
+          sortOrder: number,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        }) &&
+        resource.data.name.size() > 0 &&
+        resource.data.slug.size() > 0;
+    }
+    
+    // Blog posts collection - Public read, Admin write
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+      
+      allow create, update: if 
+        resource.data.matches({
+          title: string,
+          contentMarkdown: string,
+          publishDate: timestamp,
+          category: string,
+          imageUrls: list,
+          seoDescription: string,
+          isActive: bool,
+          viewCount: number,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        }) &&
+        resource.data.title.size() > 0 &&
+        resource.data.contentMarkdown.size() > 0 &&
+        resource.data.viewCount >= 0;
+    }
+    
+    // Events collection (Ramadan, White Friday, etc.) - Public read, Admin write
+    match /events/{eventId} {
+      allow read: if true;
+      allow create: if isAdmin();
+      allow update: if isAdmin();
+      allow delete: if isAdmin();
+      
+      allow create, update: if 
+        resource.data.matches({
+          name: string,
+          startDate: timestamp,
+          endDate: timestamp,
+          bannerUrl: string,
+          specialCategory: string,
+          isActive: bool,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        }) &&
+        resource.data.name.size() > 0 &&
+        resource.data.startDate < resource.data.endDate;
+    }
+    
+    // Analytics collection - Write only from Cloud Functions
+    match /analytics/{analyticsId} {
+      allow read: if isAdmin();
+      allow write: if isCloudFunction();
+    }
+    
+    // User activity (anonymous tracking) - Write from Functions, read from Admin
+    match /user_activity/{activityId} {
+      allow read: if isAdmin();
+      allow write: if isCloudFunction();
+    }
+    
+    // Deny all other reads/writes
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

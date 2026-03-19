@@ -1,0 +1,15 @@
+{
+  "name": "arabic-coupons",
+  "version": "1.0.0",
+  "description": "Arabic coupon aggregator for Saudi/MENA market",
+  "private": true,
+  "scripts": {
+    "deploy:functions": "cd functions && npm install && npx firebase deploy --only functions",
+    "deploy:hosting": "npx firebase deploy --only hosting",
+    "deploy:rules": "npx firebase deploy --only firestore:rules,storage",
+    "deploy:all": "npx firebase deploy"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
